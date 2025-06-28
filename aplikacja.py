@@ -1,6 +1,5 @@
 import tkinter as tk
 import tworzenie
-import ukladkart
 import klikanie
 import zmienne as z
 import tworzenie_kart

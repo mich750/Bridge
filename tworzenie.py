@@ -13,6 +13,7 @@ def zamien(root):
 
     z.koniec=False
     z.lic=[]
+    z.obrazki=[]
     z.stol={}
     z.stol_app=[]
     z.wzial='W'

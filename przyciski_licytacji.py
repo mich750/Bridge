@@ -61,6 +61,11 @@ def klik_licytuj(widget, licytowanie, przyciski):
 
 def zakoncz():
     z.koniec = True
+    try:
+        z.wzial = ['W', 'N', 'E', 'S'][z.lic.index([x for x in z.lic if x not in ['pass', 'x', 'xx']][-1]) % 4]
+        z.dziadek=['W', 'N', 'E', 'S', 'W'][['W', 'N', 'E', 'S'].index(z.wzial)+1]
+    except:
+        pass
     if z.lic[-4] == 'x':
         if z.lic[-5] == 'pass':
             z.lic[-4] = f'{z.lic[-7]}x'
@@ -82,11 +87,6 @@ def zakoncz():
         else:
             z.rozgrywa = 'EW'
     z.ramka_wynik.config(text=z.ramka_wynik.cget('text') + z.lic[-4])
-    try:
-        z.wzial = ['W', 'N', 'E', 'S'][z.lic.index([x for x in z.lic if x not in ['pass', 'x', 'xx']][-1]) % 4]
-        z.dziadek=['W', 'N', 'E', 'S', 'W'][['W', 'N', 'E', 'S'].index(z.wzial)+1]
-    except:
-        pass
     for i in z.karty[1].values():
         for j in i.reka:
             if j.kolor == z.lic[-4][1:].replace('x', ''): j.atu = True

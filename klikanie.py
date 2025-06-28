@@ -66,7 +66,9 @@ def klik(root):
         if (z.punkty['NSpod2']>=100 and z.punkty['NSpod1']>=100) or (z.punkty['EWpod2']>=100 and z.punkty['EWpod1']>=100) or z.punkty['NSpod3']>=100 or z.punkty['EWpod3']>=100:
             if z.punkty['NSnad']+z.punkty['NSpod1']+z.punkty['NSpod2']+z.punkty['NSpod3']>z.punkty['EWnad']+z.punkty['EWpod1']+z.punkty['EWpod2']+z.punkty['EWpod3']:
                 tekst='WYGRAŁEŚ'
-            else: tekst='PRZEGRAŁEŚ'
+            else:
+                z.ramki['N'].destroy()
+                tekst='PRZEGRAŁEŚ'
             z.wygrany=tk.Label(root, text=tekst, font=('Arial', 70), bg='Forestgreen', fg='red')
             z.wygrany.place(x=525, y=30)
             for i in z.punkty: z.punkty[i]=0

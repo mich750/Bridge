@@ -12,15 +12,30 @@ def doloz(wist, kto):
         a= max((x for x in z.karty[1][kto].reka if x.kolor==wist.kolor), key=lambda x: x.wartosc)
         b = min((x for x in z.karty[1][kto].reka if x.kolor==wist.kolor), key=lambda x: x.wartosc)
         warunek=a.wartosc > max(x.wartosc for x in z.stol.values() if x.kolor==wist.kolor)
+        if warunek:
+            c=min((x for x in z.karty[1][kto].reka if x.kolor==wist.kolor and x.wartosc>max(y.wartosc for y in z.stol.values())), key=lambda x: x.wartosc)
         if not warunek:
             doklada=b
         elif len(z.stol)<2:
             doklada=a
         elif kto=='W':
-            if a.wartosc==z.stol['E'].wartosc+1: doklada=b
+            if len(z.stol)==3:
+                if z.stol['E'].kolor==wist.kolor and z.stol['E'].wartosc==max(x.wartosc for x in z.stol.values()):
+                    doklada=b
+                else:
+                    doklada=c
+            elif a.wartosc==z.stol['E'].wartosc+1: doklada=b
             else: doklada=a
-        elif kto=='E' and a.wartosc==z.stol['W'].wartosc+1:
-            doklada=b
+        elif kto=='E':
+            if len(z.stol)==3:
+                if z.stol['W'].kolor==wist.kolor and z.stol['W'].wartosc==max(x.wartosc for x in z.stol.values()):
+                    doklada=b
+                else:
+                    doklada=c
+            if a.wartosc==z.stol['W'].wartosc+1: doklada=b
+            else: doklada=a
+        elif len(z.stol)==3:
+            doklada=c
         else:
             doklada=a
     label=tk.Label(z.ramki[kto], image=z.karty[0][kto][z.karty[1][kto].reka.index(doklada)], bg='ForestGreen')
@@ -40,7 +55,10 @@ def doloz(wist, kto):
     z.stol[kto] = doklada
 
 def wistuj(kto):
-    wist = random.choice(z.karty[1][kto].reka)
+    if True in [True in [x.atu for x in z.karty[1][y].reka] for y in ['N', 'E', 'S', 'W']]:
+        wist = random.choice(z.karty[1][kto].reka)
+    else:
+        wist=max((x for x in z.karty[1][kto].reka if x.kolor==z.karty[1][kto].najdluzszy()), key=lambda x: x.wartosc)
     label = tk.Label(z.ramki[kto], image=z.karty[0][kto][z.karty[1][kto].reka.index(wist)], bg='ForestGreen')
     label.image = z.karty[0][kto][z.karty[1][kto].reka.index(wist)]
     if kto == 'W':

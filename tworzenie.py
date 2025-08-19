@@ -9,16 +9,18 @@ def zamien(root):
     z.fr_przyciski.destroy()
     z.wygrany=tk.Label()
     z.wygrany.destroy()
-    for i in z.ramki.values(): i.destroy()
+    z.ramki.destroy()
 
     z.koniec=False
     z.lic=[]
-    z.obrazki=[]
+    z.obrazki={'E': [], 'W': [], 'N': []}
     z.stol={}
     z.stol_app=[]
     z.wzial='W'
     z.lewyNS=0
     z.koniecgry=False
+    z.po_wiscie=False
+    z.kosz=[]
 
     z.karty = tworzenie_kart.karty()
     z.ramki = tworzenie_kart.uklad_kart(root)

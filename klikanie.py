@@ -6,43 +6,45 @@ import funkcje_aplikacji as f
 import tworzenie_kart
 
 def klik(root):
+    if z.czekaj:
+        z.czekaj=False
+        return 0
     if z.koniec:
         if z.lic[-4]=='pass': return 0
         z.fr_przyciski.destroy()
-        if len(z.ramki)==3 and z.rozgrywa=='NS':
-            tworzenie_kart.brakujace(root)
-        elif len(z.ramki)==3 and z.wzial=='N':
-            tworzenie_kart.zakryte_N(root)
+        if not z.po_wiscie and z.wzial!='S':
             tworzenie_kart.karty_dziadka(root)
-        elif len(z.ramki)==3:
-            tworzenie_kart.zakryte_N(root)
-        if len(z.stol)==5:
+            z.po_wiscie = True
+        elif not z.po_wiscie:
+            #tworzenie_kart.zakryte_N(root)
+            z.po_wiscie = True
+        if len(z.stol)==4:
             if True in [x.atu for x in z.stol.values()]:
                 z.wzial = max(filter(lambda x: z.stol[x].kolor == z.lic[-4][1:].replace('x', ''), z.stol), key=lambda x: z.stol.get(x).wartosc)
             else:
                 z.wzial = max(filter(lambda x: z.stol[x].kolor == z.stol[z.wzial].kolor, z.stol), key=lambda x: z.stol.get(x).wartosc)
             z.stol={}
-            for i in range(len(z.stol_app)):
-                z.stol_app[i].destroy()
+            for i in z.stol_app:
+                z.ramki.delete(i)
             z.stol_app = []
             if z.wzial in ['N', 'S']: z.lewyNS+=1
             z.ramka_wynik.config(text=f"{z.ramka_wynik.cget('text')[:9]}{z.lewyNS} \nKontrakt: {z.lic[-4]}")
-        elif len(z.stol)==4:
-            z.stol['X']=Karta.Karta('X', 1)
-        if len(z.stol)==0 and z.wzial in ['E', 'N', 'W'] and z.karty[1][z.wzial].reka:
+        # elif len(z.stol)==4:
+        #     z.stol['X']=Karta.Karta('X', 1)
+        if len(z.stol)==0 and not z.karty[1]['E'].reka:
+            z.koniecgry=True
+        elif len(z.stol)==0 and z.wzial in ['E', 'N', 'W']:
             if z.rozgrywa=='EW' and z.wzial=='N':
                 f.wistuj('N')
-                f.doloz(z.stol['N'], 'E')
+                root.after(75, lambda: f.doloz(z.stol['N'], 'E'))
             elif z.rozgrywa=='EW' and z.wzial=='W':
                 f.wistuj(z.wzial)
-                f.doloz(z.stol['W'], 'N')
-                f.doloz(z.stol['W'], 'E')
+                root.after(75, lambda: f.doloz(z.stol['W'], 'N'))
+                root.after(150, lambda: f.doloz(z.stol['W'], 'E'))
             elif z.rozgrywa=='EW':
                 f.wistuj(z.wzial)
             elif z.wzial!='N':
                 f.wistuj(z.wzial)
-        if len(z.stol)==0 and not z.karty[1]['E'].reka and not z.karty[1]['W'].reka:
-            z.koniecgry=True
     if z.koniecgry:
         f.dodaj_punkty(z.lic[-4], z.lewyNS, z.rozgrywa)
         z.fr_przyciski=tk.Frame(root, bg='ForestGreen')

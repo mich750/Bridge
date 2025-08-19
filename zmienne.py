@@ -14,6 +14,9 @@ global rozgrywa
 global dziadek
 global obrazki
 global wygrany
+global po_wiscie
+global kosz
+global czekaj
 
 lewyNS=0
 wzial='W'
@@ -24,4 +27,7 @@ koniec=False
 koniecgry=False
 punkty={'NSnad':0, 'EWnad':0, 'NSpod1':0, 'EWpod1':0, 'NSpod2':0, 'EWpod2':0, 'NSpod3':0, 'EWpod3':0}
 kontra=False
-obrazki=[]
+obrazki={'E': [], 'W': [], 'N': []}
+po_wiscie = False
+kosz = []
+czekaj=False

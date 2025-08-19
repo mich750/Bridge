@@ -1,19 +1,21 @@
 import random
+import Karta
 import tkinter as tk
 import zmienne as z
+import ruszanie
 
 def doloz(wist, kto):
     if not [x for x in z.karty[1][kto].reka if x.kolor==wist.kolor]:
         if [x for x in z.karty[1][kto].reka if x.atu]:
             doklada=min((x for x in z.karty[1][kto].reka if x.atu), key=lambda x: x.wartosc)
         else:
-            doklada = min((x for x in z.karty[1][kto].reka), key=lambda x: x.wartosc)
+            doklada = min((x for x in z.karty[1][kto].reka if x.kolor!='X'), key=lambda x: x.wartosc)
     else:
         a= max((x for x in z.karty[1][kto].reka if x.kolor==wist.kolor), key=lambda x: x.wartosc)
         b = min((x for x in z.karty[1][kto].reka if x.kolor==wist.kolor), key=lambda x: x.wartosc)
         warunek=a.wartosc > max(x.wartosc for x in z.stol.values() if x.kolor==wist.kolor)
         if warunek:
-            c=min((x for x in z.karty[1][kto].reka if x.kolor==wist.kolor and x.wartosc>max(y.wartosc for y in z.stol.values())), key=lambda x: x.wartosc)
+            c=min((x for x in z.karty[1][kto].reka if x.kolor==wist.kolor and x.wartosc>max(y.wartosc for y in z.stol.values() if y.kolor==wist.kolor)), key=lambda x: x.wartosc)
         if not warunek:
             doklada=b
         elif len(z.stol)<2:
@@ -38,18 +40,25 @@ def doloz(wist, kto):
             doklada=c
         else:
             doklada=a
-    label=tk.Label(z.ramki[kto], image=z.karty[0][kto][z.karty[1][kto].reka.index(doklada)], bg='ForestGreen')
-    label.image=z.karty[0][kto][z.karty[1][kto].reka.index(doklada)]
     if kto=='W':
-        label.place(x=300, y=170)
+        x = 220
+        y = 345
+        k=2
     elif kto=='E':
-        label.place(x=0, y=170)
+        x=1150
+        y=345
+        k=-2
     else:
-        label.place(x=200, y=210)
-    if kto==z.dziadek:
-        z.obrazki[z.karty[1][kto].reka.index(doklada)].destroy()
-        z.obrazki.pop(z.karty[1][kto].reka.index(doklada))
+        x=680
+        y=60
+        k=1
+    label = z.ramki.create_image(x, y, image=z.karty[0][kto][z.karty[1][kto].reka.index(doklada)], anchor='nw')
+    ruszanie.przesun(label, k)
     z.stol_app.append(label)
+    if kto==z.dziadek:
+        z.ramki.delete(z.obrazki[kto][z.karty[1][kto].reka.index(doklada)])
+        z.obrazki[kto].pop(z.karty[1][kto].reka.index(doklada))
+    z.kosz.append(z.karty[0][kto][z.karty[1][kto].reka.index(doklada)])
     z.karty[0][kto].pop(z.karty[1][kto].reka.index(doklada))
     z.karty[1][kto].reka.remove(doklada)
     z.stol[kto] = doklada
@@ -59,19 +68,26 @@ def wistuj(kto):
         wist = random.choice(z.karty[1][kto].reka)
     else:
         wist=max((x for x in z.karty[1][kto].reka if x.kolor==z.karty[1][kto].najdluzszy()), key=lambda x: x.wartosc)
-    label = tk.Label(z.ramki[kto], image=z.karty[0][kto][z.karty[1][kto].reka.index(wist)], bg='ForestGreen')
-    label.image = z.karty[0][kto][z.karty[1][kto].reka.index(wist)]
     if kto == 'W':
-        label.place(x=300, y=170)
+        x=220
+        y=345
+        k=2
     elif kto=='E':
-        label.place(x=0, y=170)
+        x=1150
+        y=345
+        k=-2
     else:
-        label.place(x=200, y=210)
-    if kto==z.dziadek:
-        z.obrazki[z.karty[1][kto].reka.index(wist)].destroy()
-        z.obrazki.pop(z.karty[1][kto].reka.index(wist))
+        x=680
+        y=60
+        k=1
+    label = z.ramki.create_image(x, y, image=z.karty[0][kto][z.karty[1][kto].reka.index(wist)], anchor='nw')
+    ruszanie.przesun(label, k)
     z.stol_app.append(label)
+    if kto==z.dziadek:
+        z.ramki.delete(z.obrazki[kto][z.karty[1][kto].reka.index(wist)])
+        z.obrazki[kto].pop(z.karty[1][kto].reka.index(wist))
     z.stol[kto] = wist
+    z.kosz.append(z.karty[0][kto][z.karty[1][kto].reka.index(wist)])
     z.karty[0][kto].pop(z.karty[1][kto].reka.index(wist))
     z.karty[1][kto].reka.remove(wist)
     z.stol[kto]=wist
